@@ -26,7 +26,7 @@ func New(t *testing.T) (context.Context, *Suite) {
 	t.Helper()
 	t.Parallel()
 
-	cfg := config.MustLoadByPath("../config/local_tests.yaml")
+	cfg := config.MustLoadByPath("../config/local.yaml")
 
 	ctx, cancelCtx := context.WithTimeout(context.Background(), cfg.GRPC.Timeout)
 
@@ -34,7 +34,7 @@ func New(t *testing.T) (context.Context, *Suite) {
 		t.Helper()
 		cancelCtx()
 	})
-	cc, err := grpc.NewClient(
+	cc, err := grpc.DialContext(context.Background(),
 		getHostPortAddress(cfg),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
